@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RM Games - Loja de Vídeo Games & Universo Gamer</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons CDN -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            400: '#4ade80',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            dark: '#080c16',
+                            card: '#111827',
+                            border: '#1f2937'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #080c16;
+            color: #f8fafc;
+            overflow-x: hidden;
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #080c16;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1f2937;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #22c55e;
+        }
+        .glow-effect {
+            box-shadow: 0 0 30px -5px rgba(34, 197, 94, 0.25);
+        }
+        .glow-card:hover {
+            box-shadow: 0 0 25px -5px rgba(34, 197, 94, 0.2);
+        }
+    </style>
+</head>
+<body class="antialiased text-gray-100 flex flex-col min-h-screen">
+
+    <header class="sticky top-0 z-40 bg-brand-dark/95 backdrop-blur-md border-b border-brand-border/80">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20 gap-4">
+                
+                <!-- Logo RM Games -->
+                <a href="#home" class="flex items-center gap-3 group shrink-0">
+                    <div class="w-11 h-11 rounded-xl bg-gradient-to-tr from-brand-600 to-brand-400 flex items-center justify-center text-white font-black text-xl shadow-lg group-hover:scale-105 transition-transform">
+                        <i class="fa-solid fa-gamepad"></i>
+                    </div>
+                    <div>
+                        <span class="text-2xl font-black tracking-wider text-white">RM <span class="text-brand-500">GAMES</span></span>
+                        <span class="block text-[10px] text-gray-400 font-medium -mt-1 tracking-widest uppercase">The Next Gen Store</span>
+                    </div>
+                </a>
+
+                <!-- Desktop Search Input -->
+                <div class="hidden lg:flex items-center flex-1 max-w-md mx-8 relative">
+                    <input type="text" id="global-search" oninput="handleSearch(this.value)" placeholder="Buscar PS5, Nintendo, Xbox, Zelda, FIFA..." class="w-full bg-brand-card/90 border border-brand-border/90 rounded-full py-2.5 pl-11 pr-4 text-sm text-white placeholder-gray-400 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all">
+                    <i class="fa-solid fa-magnifying-glass absolute left-4 text-gray-400"></i>
+                </div>
+
+                <!-- Navigation Links -->
+                <nav class="hidden md:flex items-center space-x-6 text-sm font-semibold">
+                    <a href="#home" class="text-gray-300 hover:text-brand-500 transition-colors">Início</a>
+                    <a href="#consoles" class="text-gray-300 hover:text-brand-500 transition-colors">Consoles</a>
+                    <a href="#games" class="text-gray-300 hover:text-brand-500 transition-colors">Jogos</a>
+                    <a href="#accessories" class="text-gray-300 hover:text-brand-500 transition-colors">Acessórios</a>
+                    <a href="#articles" class="text-gray-300 hover:text-brand-500 transition-colors">Artigos</a>
+                </nav>
+
+                <!-- Actions / Cart Button -->
+                <div class="flex items-center gap-3">
+                    <button onclick="toggleCartModal()" class="relative bg-brand-card hover:bg-brand-border border border-brand-border text-white px-4 py-2.5 rounded-full font-semibold transition-all flex items-center gap-2 group">
+                        <i class="fa-solid fa-cart-shopping text-brand-500 group-hover:scale-110 transition-transform"></i>
+                        <span class="hidden sm:inline text-xs font-bold">Carrinho</span>
+                        <span id="cart-badge" class="bg-brand-500 text-brand-dark text-xs font-black px-2 py-0.5 rounded-full min-w-[20px] text-center">0</span>
+                    </button>
+
+                    <!-- Mobile Menu Trigger -->
+                    <button id="mobile-menu-btn" onclick="toggleMobileMenu()" class="md:hidden text-gray-300 hover:text-white p-2">
+                        <i class="fa-solid fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="mobile-menu" class="hidden md:hidden bg-brand-card border-b border-brand-border px-4 py-4 space-y-3">
+            <div class="relative mb-3">
+                <input type="text" oninput="handleSearch(this.value)" placeholder="Buscar na loja..." class="w-full bg-brand-dark border border-brand-border rounded-lg py-2 pl-10 pr-4 text-sm text-white placeholder-gray-400">
+                <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-gray-400 text-sm"></i>
+            </div>
+            <a href="#home" onclick="toggleMobileMenu()" class="block py-2 text-gray-300 hover:text-brand-500 font-medium">Início</a>
+            <a href="#consoles" onclick="toggleMobileMenu()" class="block py-2 text-gray-300 hover:text-brand-500 font-medium">Consoles</a>
+            <a href="#games" onclick="toggleMobileMenu()" class="block py-2 text-gray-300 hover:text-brand-500 font-medium">Jogos</a>
+            <a href="#accessories" onclick="toggleMobileMenu()" class="block py-2 text-gray-300 hover:text-brand-500 font-medium">Acessórios</a>
+            <a href="#articles" onclick="toggleMobileMenu()" class="block py-2 text-gray-300 hover:text-brand-500 font-medium">Artigos Gamer</a>
+        </div>
+    </header>
+
+    <section id="home" class="relative pt-10 pb-16 overflow-hidden">
+        <div class="absolute top-10 left-1/2 -translate-x-1/2 w-full max-w-7xl h-96 bg-brand-500/10 rounded-full blur-[120px] -z-10 pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+                
+                <!-- Hero Left Text -->
+                <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
+                    <div class="inline-flex items-center gap-2 bg-brand-card/90 border border-brand-500/30 px-4 py-1.5 rounded-full text-xs font-semibold text-brand-400">
+                        <span class="w-2 h-2 rounded-full bg-brand-500 animate-pulse"></span>
+                        Ofertas Especiais RM Games
+                    </div>
+
+                    <h1 class="text-4xl sm:text-6xl font-black text-white leading-tight">
+                        SUA JORNADA <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-400 via-brand-500 to-emerald-300">GAMER COMEÇA AQUI</span>
+                    </h1>
+
+                    <p class="text-base sm:text-lg text-gray-300 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
+                        Na <strong class="text-white">RM Games</strong> você encontra os consoles de última geração, jogos mais aguardados do ano, acessórios pro e notícias atualizadas do universo gamer.
+                    </p>
+
+                    <div class="flex flex-wrap gap-4 justify-center lg:justify-start pt-2">
+                        <a href="#consoles" class="bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-brand-dark font-black px-8 py-4 rounded-full text-sm transition-all shadow-lg glow-effect flex items-center gap-3">
+                            <i class="fa-solid fa-gamepad"></i> Ver Consoles
+                        </a>
+                        <a href="#games" class="bg-brand-card hover:bg-brand-border text-white border border-brand-border font-bold px-8 py-4 rounded-full text-sm transition-colors flex items-center gap-3">
+                            Explorar Jogos <i class="fa-solid fa-arrow-right text-brand-500"></i>
+                        </a>
+                    </div>
+
+                    <!-- Store Highlights -->
+                    <div class="grid grid-cols-3 gap-4 pt-6 border-t border-brand-border/60 max-w-lg mx-auto lg:mx-0">
+                        <div>
+                            <span class="text-lg font-black text-white block">100% Original</span>
+                            <span class="text-xs text-gray-400">Garantia oficial</span>
+                        </div>
+                        <div>
+                            <span class="text-lg font-black text-white block">Envio Rápido</span>
+                            <span class="text-xs text-gray-400">Todo o Brasil</span>
+                        </div>
+                        <div>
+                            <span class="text-lg font-black text-white block">Até 12x</span>
+                            <span class="text-xs text-gray-400">Sem juros no cartão</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hero Right Card -->
+                <div class="lg:col-span-5">
+                    <div class="relative bg-gradient-to-b from-brand-card to-brand-dark p-6 rounded-3xl border border-brand-border glow-effect">
+                        <span class="absolute top-4 right-4 bg-red-600 text-white text-[10px] font-black uppercase px-3 py-1 rounded-full tracking-wider">Destaque da Semana</span>
+                        <img src="https://placehold.co/600x400/111827/22c55e?text=PlayStation+5+Slim+1TB" alt="PS5 Banner" class="w-full h-60 object-contain rounded-xl mb-4">
+                        <div class="space-y-2">
+                            <span class="text-xs font-bold text-brand-500 tracking-wider uppercase">Console Sony</span>
+                            <h2 class="text-2xl font-black text-white">PlayStation 5 Slim 1TB + Jogo</h2>
+                            <p class="text-xs text-gray-400">Experimente o carregamento super rápido com um SSD de altíssima velocidade e Ray Tracing nativo.</p>
+                            <div class="flex items-center justify-between pt-4">
+                                <div>
+                                    <span class="text-xs text-gray-500 line-through block">De R$ 4.299,00</span>
+                                    <span class="text-2xl font-black text-brand-400">R$ 3.799,00</span>
+                                </div>
+                                <button onclick="addToCart(1)" class="bg-brand-500 hover:bg-brand-600 text-brand-dark font-black px-5 py-3 rounded-xl transition-all shadow-md flex items-center gap-2 text-sm">
+                                    <i class="fa-solid fa-cart-plus"></i> Comprar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section id="consoles" class="py-16 bg-brand-card/40 border-y border-brand-border/60">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
+                <div>
+                    <span class="text-brand-500 font-bold text-xs tracking-widest uppercase">Hardware de Alta Performance</span>
+                    <h2 class="text-3xl font-black text-white">Consoles de Nova Geração</h2>
+                </div>
+
+                <!-- Console Filters -->
+                <div class="flex flex-wrap gap-2" id="console-filters">
+                    <button onclick="filterConsoles('all', this)" class="console-filter-btn active bg-brand-500 text-brand-dark px-4 py-2 rounded-full text-xs font-bold transition-all">Todos</button>
+                    <button onclick="filterConsoles('sony', this)" class="console-filter-btn bg-brand-card border border-brand-border text-gray-300 hover:text-white px-4 py-2 rounded-full text-xs font-bold transition-all">PlayStation</button>
+                    <button onclick="filterConsoles('microsoft', this)" class="console-filter-btn bg-brand-card border border-brand-border text-gray-300 hover:text-white px-4 py-2 rounded-full text-xs font-bold transition-all">Xbox</button>
+                    <button onclick="filterConsoles('nintendo', this)" class="console-filter-btn bg-brand-card border border-brand-border text-gray-300 hover:text-white px-4 py-2 rounded-full text-xs font-bold transition-all">Nintendo</button>
+                </div>
+            </div>
+
+            <!-- Consoles Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8" id="consoles-grid">
+                <!-- Dynamically loaded via JavaScript -->
+            </div>
+
+        </div>
+    </section>
+
+    <section id="games" class="py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <div class="text-center max-w-3xl mx-auto mb-12">
+                <span class="text-brand-500 font-bold text-xs tracking-widest uppercase">Lançamentos & Clássicos</span>
+                <h2 class="text-3xl sm:text-4xl font-black text-white mb-3">Catálogo de Jogos</h2>
+                <p class="text-gray-400 text-sm">Ação, aventura, RPG, esportes e corridas para todas as plataformas de jogos.</p>
+                
+                <!-- Game Filters -->
+                <div class="flex flex-wrap justify-center gap-2 mt-6" id="game-filters">
+                    <button onclick="filterGames('all', this)" class="game-filter-btn active bg-brand-500 text-brand-dark px-4 py-2 rounded-full text-xs font-bold transition-all">Todos os Jogos</button>
+                    <button onclick="filterGames('action', this)" class="game-filter-btn bg-brand-card border border-brand-border text-gray-300 px-4 py-2 rounded-full text-xs font-bold transition-all">Ação / Aventura</button>
+                    <button onclick="filterGames('rpg', this)" class="game-filter-btn bg-brand-card border border-brand-border text-gray-300 px-4 py-2 rounded-full text-xs font-bold transition-all">RPG</button>
+                    <button onclick="filterGames('sports', this)" class="game-filter-btn bg-brand-card border border-brand-border text-gray-300 px-4 py-2 rounded-full text-xs font-bold transition-all">Esportes</button>
+                </div>
+            </div>
+
+            <!-- Games Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6" id="games-grid">
+                <!-- Dynamically loaded via JavaScript -->
+            </div>
+
+        </div>
+    </section>
+
+    <section id="accessories" class="py-16 bg-brand-card/30 border-y border-brand-border">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="mb-10">
+                <span class="text-brand-500 font-bold text-xs tracking-widest uppercase">Periféricos & Gamepads</span>
+                <h2 class="text-3xl font-black text-white">Controles & Acessórios</h2>
+            </div>
+
+            <!-- Accessories Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6" id="accessories-grid">
+                <!-- Dynamically loaded via JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <section id="articles" class="py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
+                <div>
+                    <span class="text-brand-500 font-bold text-xs tracking-widest uppercase">RM Games Portal</span>
+                    <h2 class="text-3xl font-black text-white">Artigos e Notícias Gamer</h2>
+                    <p class="text-gray-400 text-sm mt-1">Análises, comparativos de hardware e últimas novidades do mundo dos videogames.</p>
+                </div>
+                <div class="text-xs font-semibold text-brand-400 flex items-center gap-2 bg-brand-card px-4 py-2 rounded-full border border-brand-border">
+                    <i class="fa-regular fa-newspaper"></i> Atualizado Semanalmente
+                </div>
+            </div>
+
+            <!-- Articles Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8" id="articles-grid">
+                <!-- Dynamically loaded via JavaScript -->
+            </div>
+
+        </div>
+    </section>
+
+    <footer class="bg-brand-dark border-t border-brand-border pt-16 pb-12 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-10 mb-12">
+                
+                <!-- Col 1: About Store -->
+                <div class="space-y-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-xl bg-brand-500 flex items-center justify-center text-brand-dark font-black text-lg">
+                            <i class="fa-solid fa-gamepad"></i>
+                        </div>
+                        <span class="text-xl font-black text-white">RM GAMES</span>
+                    </div>
+                    <p class="text-gray-400 text-xs leading-relaxed">
+                        Sua referência em consoles, jogos e artigos sobre o universo dos videogames. Entrega rápida, suporte de alta qualidade e produtos 100% originais.
+                    </p>
+                    <div class="flex space-x-3 text-gray-400 pt-2">
+                        <a href="#" class="w-9 h-9 rounded-full bg-brand-card border border-brand-border flex items-center justify-center hover:text-brand-500 hover:border-brand-500 transition-colors"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="#" class="w-9 h-9 rounded-full bg-brand-card border border-brand-border flex items-center justify-center hover:text-brand-500 hover:border-brand-500 transition-colors"><i class="fa-brands fa-youtube"></i></a>
+                        <a href="#" class="w-9 h-9 rounded-full bg-brand-card border border-brand-border flex items-center justify-center hover:text-brand-500 hover:border-brand-500 transition-colors"><i class="fa-brands fa-twitch"></i></a>
+                        <a href="#" class="w-9 h-9 rounded-full bg-brand-card border border-brand-border flex items-center justify-center hover:text-brand-500 hover:border-brand-500 transition-colors"><i class="fa-brands fa-discord"></i></a>
+                    </div>
+                </div>
+
+                <!-- Col 2: Categories -->
+                <div>
+                    <h3 class="text-white font-bold text-xs mb-4 uppercase tracking-wider">Categorias</h3>
+                    <ul class="space-y-2.5 text-xs text-gray-400">
+                        <li><a href="#consoles" class="hover:text-brand-500 transition-colors">PlayStation 5 & Controles</a></li>
+                        <li><a href="#consoles" class="hover:text-brand-500 transition-colors">Xbox Series X | S</a></li>
+                        <li><a href="#consoles" class="hover:text-brand-500 transition-colors">Nintendo Switch OLED</a></li>
+                        <li><a href="#games" class="hover:text-brand-500 transition-colors">Lançamentos Mídia Física</a></li>
+                        <li><a href="#accessories" class="hover:text-brand-500 transition-colors">Headsets e Gamepads Pro</a></li>
+                    </ul>
+                </div>
+
+                <!-- Col 3: Customer Support -->
+                <div>
+                    <h3 class="text-white font-bold text-xs mb-4 uppercase tracking-wider">Atendimento</h3>
+                    <ul class="space-y-2.5 text-xs text-gray-400">
+                        <li><a href="javascript:void(0)" onclick="showToast('Suporte: contato@rmgames.com.br')" class="hover:text-brand-500 transition-colors">Central de Ajuda</a></li>
+                        <li><a href="javascript:void(0)" onclick="showToast('Frete Grátis para compras acima de R$ 299')" class="hover:text-brand-500 transition-colors">Política de Frete</a></li>
+                        <li><a href="javascript:void(0)" onclick="showToast('Garantia oficial de até 12 meses')" class="hover:text-brand-500 transition-colors">Garantia & Trocas</a></li>
+                        <li><a href="javascript:void(0)" onclick="showToast('Seus pagamentos são criptografados')" class="hover:text-brand-500 transition-colors">Segurança do Site</a></li>
+                    </ul>
+                </div>
+
+                <!-- Col 4: Newsletter -->
+                <div>
+                    <h3 class="text-white font-bold text-xs mb-4 uppercase tracking-wider">Clube RM Gamer</h3>
+                    <p class="text-xs text-gray-400 mb-3">Receba cupons de desconto e novidades de pré-venda em primeira mão.</p>
+                    <form onsubmit="handleNewsletter(event)" class="space-y-2">
+                        <input type="email" required placeholder="Seu melhor e-mail" class="w-full bg-brand-card border border-brand-border rounded-xl px-4 py-2.5 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-brand-500">
+                        <button type="submit" class="w-full bg-brand-500 hover:bg-brand-600 text-brand-dark font-black text-xs py-2.5 rounded-xl transition-colors">
+                            Cadastrar no Clube
+                        </button>
+                    </form>
+                </div>
+
+            </div>
+
+            <div class="border-t border-brand-border/60 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-gray-500 gap-4">
+                <p>&copy; 2026 RM Games Store. Todos os direitos reservados.</p>
+                <div class="flex items-center space-x-4 text-lg text-gray-400">
+                    <i class="fa-brands fa-pix text-emerald-400"></i>
+                    <i class="fa-brands fa-cc-visa"></i>
+                    <i class="fa-brands fa-cc-mastercard"></i>
+                    <i class="fa-solid fa-barcode"></i>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <div id="cart-modal" class="fixed inset-0 z-50 invisible opacity-0 transition-all duration-300">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="toggleCartModal()"></div>
+        <div class="absolute right-0 top-0 h-full w-full max-w-md bg-brand-dark border-l border-brand-border shadow-2xl flex flex-col p-6 overflow-hidden">
+            
+            <div class="flex items-center justify-between pb-4 border-b border-brand-border">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-cart-shopping text-brand-500 text-xl"></i>
+                    <h3 class="text-lg font-bold text-white">Seu Carrinho</h3>
+                </div>
+                <button onclick="toggleCartModal()" class="text-gray-400 hover:text-white p-2">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+
+            <!-- Cart Items Container -->
+            <div class="flex-1 overflow-y-auto py-4 space-y-4" id="cart-items-container">
+                <!-- Injected via JS -->
+            </div>
+
+            <!-- Cart Summary Footer -->
+            <div class="pt-4 border-t border-brand-border space-y-4">
+                <div class="flex justify-between text-sm text-gray-400">
+                    <span>Subtotal:</span>
+                    <span id="cart-subtotal" class="text-white font-bold">R$ 0,00</span>
+                </div>
+                <div class="flex justify-between text-sm text-gray-400">
+                    <span>Frete:</span>
+                    <span class="text-brand-500 font-bold">GRÁTIS</span>
+                </div>
+                <div class="flex justify-between text-lg font-black text-white pt-2 border-t border-brand-border">
+                    <span>Total:</span>
+                    <span id="cart-total" class="text-brand-400">R$ 0,00</span>
+                </div>
+
+                <button onclick="checkout()" class="w-full bg-brand-500 hover:bg-brand-600 text-brand-dark font-black py-3.5 rounded-xl transition-all shadow-lg glow-effect flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-lock"></i> Finalizar Compra
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Article Detail Modal -->
+    <div id="article-modal" class="fixed inset-0 z-50 invisible opacity-0 transition-all duration-300 flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeArticleModal()"></div>
+        <div class="relative bg-brand-card border border-brand-border rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto p-6 z-10">
+            <button onclick="closeArticleModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white w-8 h-8 rounded-full bg-brand-dark flex items-center justify-center border border-brand-border">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div id="article-modal-content">
+                <!-- Injected via JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Component -->
+    <div id="toast" class="fixed bottom-6 right-6 bg-brand-card border border-brand-500/50 text-white px-5 py-3.5 rounded-xl shadow-2xl transform translate-y-20 opacity-0 transition-all duration-300 z-50 flex items-center gap-3">
+        <div class="w-8 h-8 rounded-full bg-brand-500/20 text-brand-400 flex items-center justify-center shrink-0">
+            <i class="fa-solid fa-check"></i>
+        </div>
+        <span id="toast-message" class="text-xs font-semibold">Notificação</span>
+    </div>
+
+    <!-- SCRIPT SECTION -->
+    <script>
+        const PRODUCTS = [
+            // Consoles
+            { id: 1, type: 'console', category: 'sony', title: 'PlayStation 5 Slim 1TB', desc: 'Edição digital ultrarrápida com SSD Customizado e suporte a 4K 120Hz.', price: 3799.00, oldPrice: 4299.00, img: 'https://placehold.co/400x300/111827/22c55e?text=PS5+Slim+1TB', badge: 'Mais Vendido' },
+            { id: 2, type: 'console', category: 'microsoft', title: 'Xbox Series X 1TB Black', desc: '12 Teraflops de poder gráfico. Suporte a Ray Tracing e Quick Resume.', price: 4199.00, oldPrice: 4599.00, img: 'https://placehold.co/400x300/111827/22c55e?text=Xbox+Series+X', badge: 'Destaque' },
+            { id: 3, type: 'console', category: 'nintendo', title: 'Nintendo Switch OLED 64GB', desc: 'Tela OLED vibrante de 7", suporte ajustável e áudio aprimorado.', price: 2150.00, oldPrice: 2499.00, img: 'https://placehold.co/400x300/111827/22c55e?text=Nintendo+Switch+OLED', badge: 'Oferta' },
+            { id: 4, type: 'console', category: 'sony', title: 'PlayStation 5 Pro 2TB', desc: 'Processamento gráfico avançado com PSSR e suporte nativo a 4K 60FPS.', price: 6499.00, oldPrice: null, img: 'https://placehold.co/400x300/111827/22c55e?text=PS5+Pro+2TB', badge: 'Lançamento' },
+            { id: 5, type: 'console', category: 'microsoft', title: 'Xbox Series S 1TB White', desc: 'Performance digital compacta com armazenamento expandido de 1TB.', price: 2799.00, oldPrice: 2999.00, img: 'https://placehold.co/400x300/111827/22c55e?text=Xbox+Series+S+1TB', badge: null },
+            
+            // Games
+            { id: 6, type: 'game', category: 'action', platform: 'PS5', title: "Marvel's Spider-Man 2", price: 349.90, img: 'https://placehold.co/300x400/111827/ffffff?text=Spider-Man+2' },
+            { id: 7, type: 'game', category: 'rpg', platform: 'Xbox', title: 'Starfield Premium Edition', price: 299.00, img: 'https://placehold.co/300x400/111827/ffffff?text=Starfield' },
+            { id: 8, type: 'game', category: 'action', platform: 'Switch', title: 'Zelda: Tears of the Kingdom', price: 389.00, img: 'https://placehold.co/300x400/111827/ffffff?text=Zelda+TOTK' },
+            { id: 9, type: 'game', category: 'rpg', platform: 'Multi', title: 'Elden Ring: Shadow of Erdtree', price: 249.90, img: 'https://placehold.co/300x400/111827/ffffff?text=Elden+Ring' },
+            { id: 10, type: 'game', category: 'sports', platform: 'Multi', title: 'EA SPORTS FC 26', price: 329.00, img: 'https://placehold.co/300x400/111827/ffffff?text=EA+FC+26' },
+            { id: 11, type: 'game', category: 'action', platform: 'PS5', title: 'God of War Ragnarök', price: 279.00, img: 'https://placehold.co/300x400/111827/ffffff?text=God+Of+War' },
+            { id: 12, type: 'game', category: 'rpg', platform: 'Multi', title: 'Final Fantasy XVI', price: 299.90, img: 'https://placehold.co/300x400/111827/ffffff?text=Final+Fantasy+XVI' },
+            { id: 13, type: 'game', category: 'sports', platform: 'Multi', title: 'NBA 2K26 Next-Gen', price: 319.90, img: 'https://placehold.co/300x400/111827/ffffff?text=NBA+2K26' },
+
+            // Accessories
+            { id: 14, type: 'accessory', category: 'sony', title: 'Controle DualSense Edge PS5', price: 1299.00, oldPrice: 1499.00, img: 'https://placehold.co/300x300/111827/22c55e?text=DualSense+Edge', badge: 'Pro' },
+            { id: 15, type: 'accessory', category: 'microsoft', title: 'Controle Sem Fio Xbox Elite Series 2', price: 1099.00, oldPrice: 1299.00, img: 'https://placehold.co/300x300/111827/22c55e?text=Xbox+Elite+2', badge: 'Pro' },
+            { id: 16, type: 'accessory', category: 'sony', title: 'Headset Sem Fio Pulse Elite PS5', price: 899.00, oldPrice: null, img: 'https://placehold.co/300x300/111827/22c55e?text=Pulse+Elite', badge: 'Áudio 3D' },
+            { id: 17, type: 'accessory', category: 'nintendo', title: 'Controle Nintendo Switch Pro', price: 449.00, oldPrice: 499.00, img: 'https://placehold.co/300x300/111827/22c55e?text=Switch+Pro+Controller', badge: null }
+        ];
+
+        const ARTICLES = [
+            {
+                id: 1,
+                category: 'Lançamentos',
+                title: 'As principais inovações tecnológicas nos videogames para 2026',
+                date: '21 de Setembro, 2026',
+                readTime: '4 min de leitura',
+                img: 'https://placehold.co/600x350/111827/22c55e?text=Inovacoes+Gamer+2026',
+                excerpt: 'Com a evolução das técnicas de Upscaling por IA como PSSR e DLSS, analisamos como os jogos estão alcançando performance impressionante.',
+                content: 'A indústria de jogos digitais em 2026 evoluiu drasticamente. Com a integração de algoritmos avançados de aprendizado de máquina para renderização de quadros e rastreamento de raios (Ray Tracing em tempo real), os novos consoles entregam gráficos a 60 e 120 quadros por segundo sem perda de fidelidade visual. Os desenvolvedores conseguem criar mundos abertos dinâmicos, com carregamento instantâneo via arquiteturas SSD avançadas.'
+            },
+            {
+                id: 2,
+                category: 'Hardware',
+                title: 'Guia Definitivo: Qual console escolher para sua sala de jogos?',
+                date: '18 de Setembro, 2026',
+                readTime: '6 min de leitura',
+                img: 'https://placehold.co/600x350/111827/22c55e?text=Guia+de+Consoles',
+                excerpt: 'Analisamos o ecossistema do PlayStation 5, as facilidades do Xbox Game Pass e a portabilidade única do Nintendo Switch.',
+                content: 'Escolher o console ideal depende do seu perfil de jogador. Se o seu foco é em grandes exclusivos narrativos e feedback tátil imersivo no controle, o PlayStation 5 se destaca. Para quem busca um ecossistema com centenas de jogos por assinatura mensal, o Xbox Series X|S com o Game Pass oferece excelente custo-benefício. Já para diversão em família e portabilidade, a linha Nintendo Switch continua sendo a líder incontestável.'
+            },
+            {
+                id: 3,
+                category: 'Análise',
+                title: 'O impacto dos jogos Indie e por que você deve dar uma chance a eles',
+                date: '15 de Setembro, 2026',
+                readTime: '5 min de leitura',
+                img: 'https://placehold.co/600x350/111827/22c55e?text=Jogos+Indie+2026',
+                excerpt: 'Direção de arte marcante, trilhas sonoras envolventes e mecânicas fora do comum: veja nossa seleção imperdível.',
+                content: 'Enquanto os grandes estúdios apostam em superproduções de alto orçamento, a cena de jogos independentes continua a ser o berço da inovação criativa. Títulos indie frequentemente arriscam em abordagens narrativas emocionais e mecânicas de gameplay surpreendentes, demonstrando que criatividade e paixão superam orçamentos astronômicos.'
+            }
+        ];
+
+        let cart = [];
+
+        function formatMoney(val) {
+            return val.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        }
+
+        function renderConsoles(filter = 'all', searchQuery = '') {
+            const container = document.getElementById('consoles-grid');
+            let list = PRODUCTS.filter(p => p.type === 'console');
+
+            if (filter !== 'all') {
+                list = list.filter(p => p.category === filter);
+            }
+
+            if (searchQuery.trim() !== '') {
+                const q = searchQuery.toLowerCase();
+                list = list.filter(p => p.title.toLowerCase().includes(q) || p.desc.toLowerCase().includes(q));
+            }
+
+            if (list.length === 0) {
+                container.innerHTML = `<div class="col-span-full text-center py-12 text-gray-400">Nenhum console encontrado para este filtro.</div>`;
+                return;
+            }
+
+            container.innerHTML = list.map(item => `
+                <div class="bg-brand-card rounded-2xl border border-brand-border overflow-hidden glow-card transition-all group flex flex-col justify-between">
+                    <div class="relative p-6 bg-gradient-to-b from-brand-dark to-brand-card flex items-center justify-center h-52">
+                        ${item.badge ? `<span class="absolute top-3 left-3 bg-brand-500 text-brand-dark text-[10px] font-black uppercase px-2.5 py-1 rounded-full">${item.badge}</span>` : ''}
+                        <img src="${item.img}" alt="${item.title}" class="max-h-40 object-contain group-hover:scale-105 transition-transform duration-300">
+                    </div>
+                    <div class="p-6 flex-1 flex flex-col justify-between space-y-4">
+                        <div>
+                            <span class="text-[10px] font-bold text-brand-500 uppercase tracking-widest">${item.category}</span>
+                            <h3 class="text-lg font-bold text-white mt-1 group-hover:text-brand-400 transition-colors">${item.title}</h3>
+                            <p class="text-xs text-gray-400 mt-2 line-clamp-2">${item.desc}</p>
+                        </div>
+                        <div class="pt-2 border-t border-brand-border flex items-center justify-between">
+                            <div>
+                                ${item.oldPrice ? `<span class="text-xs text-gray-500 line-through block">${formatMoney(item.oldPrice)}</span>` : ''}
+                                <span class="text-xl font-black text-white">${formatMoney(item.price)}</span>
+                            </div>
+                            <button onclick="addToCart(${item.id})" class="bg-brand-500 hover:bg-brand-600 text-brand-dark font-bold p-3 rounded-xl transition-all shadow-md flex items-center justify-center">
+                                <i class="fa-solid fa-cart-plus text-base"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderGames(filter = 'all', searchQuery = '') {
+            const container = document.getElementById('games-grid');
+            let list = PRODUCTS.filter(p => p.type === 'game');
+
+            if (filter !== 'all') {
+                list = list.filter(p => p.category === filter);
+            }
+
+            if (searchQuery.trim() !== '') {
+                const q = searchQuery.toLowerCase();
+                list = list.filter(p => p.title.toLowerCase().includes(q) || p.platform.toLowerCase().includes(q));
+            }
+
+            if (list.length === 0) {
+                container.innerHTML = `<div class="col-span-full text-center py-12 text-gray-400">Nenhum jogo encontrado para esta busca.</div>`;
+                return;
+            }
+
+            container.innerHTML = list.map(game => `
+                <div class="bg-brand-card rounded-2xl border border-brand-border overflow-hidden glow-card transition-all group flex flex-col justify-between">
+                    <div class="relative aspect-[3/4] overflow-hidden">
+                        <img src="${game.img}" alt="${game.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <span class="absolute top-3 right-3 bg-brand-dark/90 text-brand-400 border border-brand-border text-[10px] font-black uppercase px-2.5 py-1 rounded-md">
+                            ${game.platform}
+                        </span>
+                    </div>
+                    <div class="p-4 flex-1 flex flex-col justify-between">
+                        <div>
+                            <h4 class="font-bold text-white text-sm line-clamp-1 group-hover:text-brand-400 transition-colors">${game.title}</h4>
+                            <span class="text-xs text-gray-400 capitalize">${game.category}</span>
+                        </div>
+                        <div class="flex items-center justify-between mt-4 pt-2 border-t border-brand-border">
+                            <span class="text-base font-extrabold text-brand-400">${formatMoney(game.price)}</span>
+                            <button onclick="addToCart(${game.id})" class="bg-brand-card hover:bg-brand-500 text-brand-500 hover:text-brand-dark border border-brand-500 font-bold px-3 py-1.5 rounded-lg text-xs transition-all">
+                                + Carrinho
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderAccessories(searchQuery = '') {
+            const container = document.getElementById('accessories-grid');
+            let list = PRODUCTS.filter(p => p.type === 'accessory');
+
+            if (searchQuery.trim() !== '') {
+                const q = searchQuery.toLowerCase();
+                list = list.filter(p => p.title.toLowerCase().includes(q));
+            }
+
+            container.innerHTML = list.map(item => `
+                <div class="bg-brand-card rounded-2xl border border-brand-border p-4 flex flex-col justify-between group hover:border-brand-500/50 transition-all">
+                    <div class="relative bg-brand-dark p-4 rounded-xl flex items-center justify-center mb-3 h-40">
+                        ${item.badge ? `<span class="absolute top-2 left-2 bg-brand-500 text-brand-dark text-[9px] font-black uppercase px-2 py-0.5 rounded-full">${item.badge}</span>` : ''}
+                        <img src="${item.img}" alt="${item.title}" class="max-h-32 object-contain group-hover:scale-105 transition-transform">
+                    </div>
+                    <div>
+                        <h4 class="text-xs font-bold text-white line-clamp-2">${item.title}</h4>
+                        <div class="flex items-center justify-between mt-3 pt-2 border-t border-brand-border">
+                            <span class="text-sm font-black text-brand-400">${formatMoney(item.price)}</span>
+                            <button onclick="addToCart(${item.id})" class="bg-brand-500 text-brand-dark p-2 rounded-lg text-xs font-bold hover:bg-brand-600 transition-colors">
+                                <i class="fa-solid fa-cart-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderArticles() {
+            const container = document.getElementById('articles-grid');
+            container.innerHTML = ARTICLES.map(art => `
+                <article class="bg-brand-card rounded-2xl border border-brand-border overflow-hidden hover:border-brand-500/40 transition-all flex flex-col h-full group">
+                    <div class="relative h-48 overflow-hidden">
+                        <img src="${art.img}" alt="${art.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <span class="absolute top-3 left-3 bg-brand-500 text-brand-dark text-[10px] font-black uppercase px-2.5 py-1 rounded-full">
+                            ${art.category}
+                        </span>
+                    </div>
+                    <div class="p-6 flex-1 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center gap-3 text-xs text-gray-400 mb-2">
+                                <span><i class="fa-regular fa-calendar"></i> ${art.date}</span>
+                                <span>•</span>
+                                <span><i class="fa-regular fa-clock"></i> ${art.readTime}</span>
+                            </div>
+                            <h3 class="text-base font-bold text-white group-hover:text-brand-400 transition-colors leading-snug mb-2">${art.title}</h3>
+                            <p class="text-xs text-gray-400 line-clamp-3 leading-relaxed">${art.excerpt}</p>
+                        </div>
+                        <button onclick="openArticleModal(${art.id})" class="mt-4 text-xs font-bold text-brand-500 hover:text-brand-400 flex items-center gap-2 transition-colors">
+                            Ler artigo completo <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </article>
+            `).join('');
+        }
+
+        function addToCart(productId) {
+            const product = PRODUCTS.find(p => p.id === productId);
+            if (!product) return;
+
+            const existing = cart.find(item => item.id === productId);
+            if (existing) {
+                existing.qty += 1;
+            } else {
+                cart.push({ ...product, qty: 1 });
+            }
+
+            updateCartUI();
+            showToast(`"${product.title}" adicionado ao carrinho!`);
+        }
+
+        function removeFromCart(productId) {
+            cart = cart.filter(item => item.id !== productId);
+            updateCartUI();
+        }
+
+        function updateQty(productId, change) {
+            const item = cart.find(i => i.id === productId);
+            if (item) {
+                item.qty += change;
+                if (item.qty <= 0) {
+                    removeFromCart(productId);
+                } else {
+                    updateCartUI();
+                }
+            }
+        }
+
+        function updateCartUI() {
+            const badge = document.getElementById('cart-badge');
+            const container = document.getElementById('cart-items-container');
+            const subtotalEl = document.getElementById('cart-subtotal');
+            const totalEl = document.getElementById('cart-total');
+
+            const totalItems = cart.reduce((acc, item) => acc + item.qty, 0);
+            badge.textContent = totalItems;
+
+            if (cart.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-16 space-y-3">
+                        <i class="fa-solid fa-basket-shopping text-4xl text-gray-600"></i>
+                        <p class="text-sm text-gray-400">Seu carrinho está vazio.</p>
+                    </div>
+                `;
+                subtotalEl.textContent = formatMoney(0);
+                totalEl.textContent = formatMoney(0);
+                return;
+            }
+
+            let total = 0;
+            container.innerHTML = cart.map(item => {
+                const itemTotal = item.price * item.qty;
+                total += itemTotal;
+                return `
+                    <div class="flex items-center gap-3 bg-brand-card p-3 rounded-xl border border-brand-border">
+                        <img src="${item.img}" alt="${item.title}" class="w-14 h-14 object-contain rounded-lg bg-brand-dark p-1">
+                        <div class="flex-1 min-w-0">
+                            <h4 class="text-xs font-bold text-white truncate">${item.title}</h4>
+                            <span class="text-xs text-brand-400 font-bold block mt-1">${formatMoney(item.price)}</span>
+                            <div class="flex items-center gap-2 mt-2">
+                                <button onclick="updateQty(${item.id}, -1)" class="w-5 h-5 bg-brand-border text-gray-300 rounded flex items-center justify-center text-xs hover:bg-brand-500 hover:text-brand-dark">-</button>
+                                <span class="text-xs font-bold text-white">${item.qty}</span>
+                                <button onclick="updateQty(${item.id}, 1)" class="w-5 h-5 bg-brand-border text-gray-300 rounded flex items-center justify-center text-xs hover:bg-brand-500 hover:text-brand-dark">+</button>
+                            </div>
+                        </div>
+                        <button onclick="removeFromCart(${item.id})" class="text-gray-500 hover:text-red-400 p-1">
+                            <i class="fa-solid fa-trash text-xs"></i>
+                        </button>
+                    </div>
+                `;
+            }).join('');
+
+            subtotalEl.textContent = formatMoney(total);
+            totalEl.textContent = formatMoney(total);
+        }
+
+        function toggleCartModal() {
+            const modal = document.getElementById('cart-modal');
+            modal.classList.toggle('invisible');
+            modal.classList.toggle('opacity-0');
+        }
+
+        function openArticleModal(articleId) {
+            const art = ARTICLES.find(a => a.id === articleId);
+            if (!art) return;
+
+            const modalContent = document.getElementById('article-modal-content');
+            modalContent.innerHTML = `
+                <span class="bg-brand-500 text-brand-dark text-[10px] font-black uppercase px-2.5 py-1 rounded-full">${art.category}</span>
+                <h2 class="text-2xl font-black text-white mt-3 mb-2">${art.title}</h2>
+                <div class="flex items-center gap-3 text-xs text-gray-400 mb-6">
+                    <span>${art.date}</span>
+                    <span>•</span>
+                    <span>${art.readTime}</span>
+                </div>
+                <img src="${art.img}" alt="${art.title}" class="w-full h-60 object-cover rounded-xl mb-6 border border-brand-border">
+                <div class="text-sm text-gray-300 leading-relaxed space-y-4">
+                    <p class="font-semibold text-gray-200">${art.excerpt}</p>
+                    <p>${art.content}</p>
+                </div>
+            `;
+
+            const modal = document.getElementById('article-modal');
+            modal.classList.remove('invisible', 'opacity-0');
+        }
+
+        function closeArticleModal() {
+            const modal = document.getElementById('article-modal');
+            modal.classList.add('invisible', 'opacity-0');
+        }
+
+        function filterConsoles(category, btnEl) {
+            document.querySelectorAll('.console-filter-btn').forEach(btn => {
+                btn.classList.remove('active', 'bg-brand-500', 'text-brand-dark');
+                btn.classList.add('bg-brand-card', 'text-gray-300');
+            });
+            btnEl.classList.add('active', 'bg-brand-500', 'text-brand-dark');
+            btnEl.classList.remove('bg-brand-card', 'text-gray-300');
+            renderConsoles(category);
+        }
+
+        function filterGames(category, btnEl) {
+            document.querySelectorAll('.game-filter-btn').forEach(btn => {
+                btn.classList.remove('active', 'bg-brand-500', 'text-brand-dark');
+                btn.classList.add('bg-brand-card', 'text-gray-300');
+            });
+            btnEl.classList.add('active', 'bg-brand-500', 'text-brand-dark');
+            btnEl.classList.remove('bg-brand-card', 'text-gray-300');
+            renderGames(category);
+        }
+
+        function handleSearch(query) {
+            renderConsoles('all', query);
+            renderGames('all', query);
+            renderAccessories(query);
+        }
+
+        function toggleMobileMenu() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        }
+
+        function handleNewsletter(e) {
+            e.preventDefault();
+            showToast('Sucesso! Você agora faz parte do Clube RM Gamer.');
+            e.target.reset();
+        }
+
+        function checkout() {
+            if (cart.length === 0) {
+                showToast('Seu carrinho está vazio!');
+                return;
+            }
+            showToast('Pedido realizado com sucesso! Obrigado por comprar na RM Games.');
+            cart = [];
+            updateCartUI();
+            toggleCartModal();
+        }
+
+        let toastTimeout;
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            const msgEl = document.getElementById('toast-message');
+            msgEl.textContent = message;
+
+            toast.classList.remove('translate-y-20', 'opacity-0');
+
+            if (toastTimeout) clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            renderConsoles();
+            renderGames();
+            renderAccessories();
+            renderArticles();
+            updateCartUI();
+        });
+    </script>
+</body>
+</html>
